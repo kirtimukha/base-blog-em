@@ -1,4 +1,6 @@
 import { useState } from "react";
+import {useQuery} from "react-query";
+// useQuery는 훅이다. 우리가 서버로부터 데이터를 페치할 때 사용하는
 
 import { PostDetail } from "./PostDetail";
 const maxPostPage = 10;
@@ -15,7 +17,11 @@ export function Posts() {
   const [selectedPost, setSelectedPost] = useState(null);
 
   // replace with useQuery
-  const data = [];
+  //const data = []; //옵션 쿼리키, 커리에 데이터를 가져올 비동기(async) 함수,
+  // 페치포스트로부터 반환된 데이터가 매핑된다.
+  const {data} = useQuery("posts", fetchPosts) ;
+  if(!data) return <div/>;
+
 
   return (
     <>
