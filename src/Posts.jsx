@@ -19,8 +19,11 @@ export function Posts() {
   // replace with useQuery
   //const data = []; //옵션 쿼리키, 커리에 데이터를 가져올 비동기(async) 함수,
   // 페치포스트로부터 반환된 데이터가 매핑된다.
-  const {data} = useQuery("posts", fetchPosts) ;
-  if(!data) return <div/>;
+  const {data, isError, error, isLoading} = useQuery("posts", fetchPosts) ;
+  if(isLoading) return <h3>Loading</h3>;
+  if(isError) return <h3>oop, Something went wrong!
+    <p>{error.toString()}</p>
+  </h3>;
 
 
   return (
