@@ -27,7 +27,7 @@ export function PostDetail({ post }) {
 
   // replace with useQuery
   const  {data, isError, error, isLoading} = useQuery(
-    "commnets",
+    ["commnets", post.id],//쿼리키를 배열로 작성하기
     () => fetchComments(post.id),
     {staleTime: 2000}) ;
   if(isLoading) return <h3>Loading</h3>;
