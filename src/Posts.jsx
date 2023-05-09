@@ -1,5 +1,5 @@
-import { useState } from "react";
-import {useQuery} from "react-query";
+import {useEffect, useState} from "react";
+import {useQuery, useQueryClient} from "react-query";
 // useQuery는 훅이다. 우리가 서버로부터 데이터를 페치할 때 사용하는
 
 import { PostDetail } from "./PostDetail";
@@ -15,6 +15,14 @@ async function fetchPosts(pageNum) {
 export function Posts() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPost, setSelectedPost] = useState(null);
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if(currentPage < maxPostPage){
+    const nextPage = currentPage + 1;
+    queryClient.prefetchQuery(["posts", nextPage], () => fetchPosts(nextPage))
+    }
+  }, [currentPage, queryClient]);
 
   // replace with useQuery
   //const data = [];
@@ -23,7 +31,8 @@ export function Posts() {
   const {data, isError, error, isLoading} = useQuery(
     ["posts", currentPage],
     () => fetchPosts(currentPage),
-    {staleTime: 2000}) ;
+    {staleTime: 2000, keepPreviousData: true
+    }) ;
   if(isLoading) return <h3>Loading</h3>;
   if(isError) return <h3>oop, Something went wrong!
     <p>{error.toString()}</p>
