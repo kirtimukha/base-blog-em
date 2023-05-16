@@ -25,13 +25,17 @@ async function updatePost(postId) {
 
 export function PostDetail({ post }) {
 
-  const deleteMutation = useMutation( (postId) => deletePost(postId) )
+
 
   // replace with useQuery
   const  {data, isError, error, isLoading} = useQuery(
     ["comments", post.id],//쿼리키를 배열로 작성하기
-    () => fetchComments(post.id),
-    {staleTime: 2000}) ;
+    () => fetchComments(post.id), {staleTime: 2000}
+  ) ;
+
+  const deleteMutation = useMutation((postId) => deletePost(postId))
+  const updateMutation = useMutation((postId) => updatePost(postId))
+
   if(isLoading) return <h3>Loading</h3>;
   if(isError) return (
     <h3>oop, comments Something went wrong!
@@ -48,7 +52,12 @@ export function PostDetail({ post }) {
       { deleteMutation.isLoading && (<p style={{color: "purple"}}  >Loading Deleting </p>)}
       { deleteMutation.isSuccess && (<p style={{color: "green"}}  >Post has been deleted </p>)}
 
-      <button>Update title</button>
+      <button onClick = {() => updateMutation.mutate(post.id)}>Update title</button>
+
+      { updateMutation.isError && (<p style={{color: "red"}} > Updating error </p>)}
+      { updateMutation.isLoading && (<p style={{color: "purple"}}  >Loading Updating </p>)}
+      { updateMutation.isSuccess && (<p style={{color: "green"}}  >Post has been updated</p>)}
+
       <p>{post.body}</p>
 
       <h4>Comments</h4>
